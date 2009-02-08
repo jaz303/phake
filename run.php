@@ -1,6 +1,6 @@
 #!/usr/local/bin/php
 <?php
-require dirname(__FILE__) . '/lib/build.php';
+require dirname(__FILE__) . '/lib/phake.php';
 require dirname(__FILE__) . '/lib/global_helpers.php';
 require dirname(__FILE__) . '/lib/option_parser.php';
 
