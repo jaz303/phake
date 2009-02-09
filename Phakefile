@@ -21,8 +21,8 @@ group('test', function() {
     
     // another level of nesting; application object is passed to all
     // executing tasks
-    desc('Run absolutely every test everywhere!');
     group('all', function() {
+        desc('Run absolutely every test everywhere!');
         task('run', 'test:units', function($application) {
             echo "All tests complete! ($application)\n";
         });
