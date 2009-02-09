@@ -15,29 +15,27 @@ try {
     $task_names = array('default');
     $trace      = false;
     
-    //
-    // Parse opts, getopt() in PHP blows goats as it can't update argv...
-
-	$equivalence = array('t' => 'trace', 'T' => 'tasks');
-	$args = $GLOBALS['argv'];
+    $args = $GLOBALS['argv'];
 	array_shift($args);
-	$parser = new \Phake\OptionParser($args, $equivalence);
-	while ($option = $parser->next_option()) {
+	$parser = new \Phake\OptionParser($args);
+	foreach ($parser->get_options() as $option => $value) {
 		switch ($option) {
+			case 't':
 			case 'trace':
 				$trace = true;
 				break;
+			case 'T':
 			case 'tasks':
 				$action = 'list';
 				break;
 			default:
-				throw new Exception("Unknown command line option\n");
+				throw new Exception("Unknown command line option '$option'");
 		}
 	}
 	
-	$remainder = $parser->remainder();
-	if (count($remainder)) $task_names = $remainder;
-
+	$non_options = $parser->get_non_options();
+	if (count($non_options)) $task_names = $non_options;
+	
     //
     // Locate runfile
 
