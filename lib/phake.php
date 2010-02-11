@@ -1,24 +1,15 @@
 <?php
-namespace Phake;
+namespace phake;
 
 class TaskNotFoundException extends \Exception {};
 class TaskCollisionException extends \Exception {};
 
 class Application
 {
-    private static $instance = null;
-    
-    public static function instance() {
-        if (!isset(self::$instance)) {
-            self::$instance = new Application;
-        }
-        return self::$instance;
-    }
-    
     private $root;
     
     public function __construct() {
-        $this->root = new Group($null, '');
+        $this->root = new Node(null, '');
     }
     
     public function root() {
@@ -62,8 +53,12 @@ class Node
 {
     private $parent;
     private $name;
+
+    private $before     = array();
+    private $tasks      = array();
+    private $after      = array();
     
-    protected $children = array();
+    private $children   = array();
     
     public function __construct($parent, $name) {
         $this->parent = $parent;
@@ -78,6 +73,13 @@ class Node
         return $this->parent;
     }
     
+    public function child_with_name($name) {
+        if (!isset($this->children[$name])) {
+            $this->children[$name] = new Node($this, $name);
+        }
+        return $this->children[$name];
+    }
+    
     public function resolve($task_name_parts) {
         if (count($task_name_parts) == 0) {
             return $this;
@@ -90,52 +92,10 @@ class Node
             }
         }
     }
-}
-
-class Group extends Node
-{
-    public function add_group($name) {
-        if (!isset($this->children[$name])) {
-            $this->children[$name] = new Group($this, $name);
-        } elseif (!($this->children[$name] instanceof Group)) {
-            throw new TaskCollisionException("Can't create group '$name', already defined as something else");
-        }
-        return $this->children[$name];
-    }
     
-    public function add_task($name, Task $t) {
-        if (!isset($this->children[$name])) {
-            $this->children[$name] = new TaskWrapper($this, $name);
-        } elseif (!($this->children[$name] instanceof TaskWrapper)) {
-            throw new TaskCollisionException("Can't create task '$name', already defined as something else");
-        }
-        $this->children[$name]->push($t);
-    }
-    
-    public function reset() {
-        foreach ($this->children as $c) $c->reset();
-    }
-    
-    public function fill_task_list(&$out, $prefix = '') {
-        foreach ($this->children as $name => $child) {
-            if ($child instanceof TaskWrapper) {
-                if ($desc = $child->get_description()) {
-                    $out[$prefix . $name] =  $desc;
-                }
-            } else {
-                $child->fill_task_list($out, "{$prefix}{$name}:");
-            }
-        }
-    }
-}
-
-class TaskWrapper extends Node
-{
-    private $tasks = array();
-    
-    public function push($task) {
-        $this->tasks[] = $task;
-    }
+    public function before(Task $task) { $this->before[] = $task; }
+    public function task(Task $task) { $this->tasks[] = $task; }
+    public function after(Task $task) { $this->after[] = $task; }
     
     public function dependencies() {
         $deps = array();
@@ -153,38 +113,52 @@ class TaskWrapper extends Node
     }
     
     public function reset() {
+        foreach ($this->before as $t) $t->reset();
         foreach ($this->tasks as $t) $t->reset();
+        foreach ($this->after as $t) $t->reset();
+        foreach ($this->children as $c) $c->reset();
     }
     
     public function invoke($application) {
         foreach ($this->dependencies() as $d) $application->invoke($d, $this->get_parent());
+        foreach ($this->before as $t) $t->invoke($application);
         foreach ($this->tasks as $t) $t->invoke($application);
+        foreach ($this->after as $t) $t->invoke($application);
     }
-
+    
+    public function fill_task_list(&$out, $prefix = '') {
+        foreach ($this->children as $name => $child) {
+            if ($desc = $child->get_description()) {
+                $out[$prefix . $name] = $desc;
+            }
+            $child->fill_task_list($out, "{$prefix}{$name}:");
+        }
+    }
 }
 
-class Task extends Node
+// Single unit of work
+class Task
 {
     private $lambda;
-    private $dependencies;
-    private $description    = null;
-    private $has_run        = false;
+    private $deps;
+    private $desc       = null;
+    private $has_run    = false;
     
-    public function __construct($lambda = null, $dependencies = array()) {
-        $this->lambda       = $lambda;
-        $this->dependencies = $dependencies;
+    public function __construct($lambda = null, $deps = array()) {
+        $this->lambda = $lambda;
+        $this->deps = $deps;
     }
     
     public function get_description() {
-        return $this->description;
+        return $this->desc;
     }
     
     public function set_description($d) {
-        $this->description = $d;
+        $this->desc = $d;
     }
     
     public function dependencies() {
-        return $this->dependencies;
+        return $this->deps;
     }
     
     public function reset() {

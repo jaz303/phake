@@ -1,23 +1,25 @@
-#!/usr/local/bin/php
+#!/usr/bin/env php
 <?php
 require dirname(__FILE__) . '/lib/phake.php';
+require dirname(__FILE__) . '/lib/utils.php';
 require dirname(__FILE__) . '/lib/global_helpers.php';
 require dirname(__FILE__) . '/lib/option_parser.php';
+require dirname(__FILE__) . '/lib/builder.php';
 
-define('RUNFILE', 'Phakefile');
+phake\Builder::$global = new phake\Builder;
 
 try {
     
-	//
+    //
     // Defaults
     
-    $action     = 'invoke';
+	$action     = 'invoke';
     $task_names = array('default');
     $trace      = false;
     
     $args = $GLOBALS['argv'];
 	array_shift($args);
-	$parser = new \Phake\OptionParser($args);
+	$parser = new phake\OptionParser($args);
 	foreach ($parser->get_options() as $option => $value) {
 		switch ($option) {
 			case 't':
@@ -38,30 +40,22 @@ try {
 	
     //
     // Locate runfile
-
-	$directory = getcwd();
-	do {
-		if (file_exists($directory . '/' . RUNFILE)) {
-			break;
-		} elseif (__is_root($directory)) {
-			throw new Exception("No Phakefile found");
-		} else {
-			$directory = dirname($directory);
-		}
-	} while (true);
     
-    if (!@chdir($directory)) {
+    $runfile = phake\resolve_runfile(getcwd());
+    $directory = dirname($runfile);
+    
+	if (!@chdir($directory)) {
         throw new Exception("Couldn't change to directory '$directory'");
     } else {
         echo "(in $directory)\n";
     }
 
-    __load_runfile(RUNFILE);
+    phake\load_runfile($runfile);
 
     //
     // Go, go, go
     
-    $application = \Phake\Application::instance();
+    $application = phake\Builder::$global->get_application();
     $application->reset();
     
     switch ($action) {
@@ -79,31 +73,9 @@ try {
             break;
     }
 
-} catch (\Phake\TaskNotFoundException $tnfe) {
-    __fatal($tnfe, "Don't know how to build task '$task_name'\n");
+} catch (phake\TaskNotFoundException $tnfe) {
+    phake\fatal($tnfe, "Don't know how to build task '$task_name'\n");
 } catch (Exception $e) {
-    __fatal($e);
-}
-
-function __load_runfile($file) {
-    require $file;
-}
-
-function __fatal($exception, $message = null) {
-    echo "aborted!\n";
-    if (!$message) $message = $exception->getMessage();
-    if (!$message) $message = get_class($exception);
-    echo $message . "\n\n";
-    global $trace;
-    if ($trace) {
-        echo $exception->getTraceAsString() . "\n";
-    } else {
-        echo "(See full trace by running task with --trace)\n";
-    }
-    die(1);
-}
-
-function __is_root($dir) {
-	return $dir == '/';
+    phake\fatal($e);
 }
 ?>

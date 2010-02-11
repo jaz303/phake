@@ -1,5 +1,5 @@
 <?php
-namespace Phake;
+namespace phake;
 
 //
 // getopt() in PHP blows goats as it can't update argv to get non-options.
