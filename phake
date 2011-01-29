@@ -55,7 +55,7 @@ try {
     
     $runfile = phake\resolve_runfile(getcwd());
     $directory = dirname($runfile);
-    
+
 	if (!@chdir($directory)) {
         throw new Exception("Couldn't change to directory '$directory'");
     } else {
@@ -74,11 +74,13 @@ try {
     switch ($action) {
         case 'list':
             $task_list = $application->get_task_list();
-			$max = max(array_map('strlen', array_keys($task_list)));
-			foreach ($task_list as $name => $desc) {
-				echo str_pad($name, $max + 4) . $desc . "\n";
+			if (count($task_list)) {
+				$max = max(array_map('strlen', array_keys($task_list)));
+				foreach ($task_list as $name => $desc) {
+					echo str_pad($name, $max + 4) . $desc . "\n";
+				}
 			}
-            break;
+			break;
         case 'invoke':
             foreach ($task_names as $task_name) {
                 $application->invoke($task_name);
