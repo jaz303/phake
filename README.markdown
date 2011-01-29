@@ -73,7 +73,24 @@ Sometimes you may want to specify that some code should run before or after a ta
 
     before('foo', function() { ... });
     after('baz:bar', function() { ... });
+    
+Task Arguments
+--------------
 
+Phake allows arguments to specified on the command line:
+
+    # Execute task `quux` with the given args
+    ./phake quux name=Jason city=Glasgow
+    
+This format must be matched exactly; do not put spaces between `=` and the argument name/value. If you need to put spaces in the argument value, place the entire assignment in quotes.
+
+Arguments are made available to tasks by the application object's `ArrayAccess` implementation:
+
+    task('task_with_args', function($app) {
+        $name = $app['name'];
+        $city = $app['city'];
+        // do some stuff...
+    });
 
 A Somewhat More Complete Example
 --------------------------------

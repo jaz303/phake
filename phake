@@ -35,8 +35,20 @@ try {
 		}
 	}
 	
-	$non_options = $parser->get_non_options();
-	if (count($non_options)) $task_names = $non_options;
+	$cli_args = array();
+	$cli_task_names = array();
+	foreach ($parser->get_non_options() as $option) {
+		if (strpos($option, '=') > 0) {
+			list($k, $v) = explode('=', $option);
+			$cli_args[$k] = $v;
+		} else {
+			$cli_task_names[] = $option;
+		}
+	}
+	
+	if (count($cli_task_names)) {
+		$task_names = $cli_task_names;
+	}
 	
     //
     // Locate runfile
@@ -56,6 +68,7 @@ try {
     // Go, go, go
     
     $application = phake\Builder::$global->get_application();
+	$application->set_args($cli_args);
     $application->reset();
     
     switch ($action) {

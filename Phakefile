@@ -1,4 +1,10 @@
 <?php
+desc('Dump all args');
+task('args', function($app) {
+    echo "Arguments:\n";
+    foreach ($app as $k => $v) echo "$k = $v\n";
+});
+
 desc('Load the application environment');
 task('environment', function() {
     echo "I am the outer environment. I should run first.\n";
