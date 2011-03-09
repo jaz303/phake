@@ -4,10 +4,27 @@ namespace phake;
 class TaskNotFoundException extends \Exception {};
 class TaskCollisionException extends \Exception {};
 
+class Utils
+{
+    public static function parse_args(array $args) {
+        $out = array();
+        $pos = 0;
+        foreach ($args as $arg) {
+            list($k, $v) = explode('=', $arg);
+            if (empty($v)) {
+                $out[$pos++] = $k;
+            } else {
+                $out[$k] = $v;
+            }
+		}
+        return $out;
+    }
+}
+
 class Application implements \ArrayAccess, \IteratorAggregate
 {
     private $root;
-        private $args;
+    private $args;
     
     public function __construct() {
         $this->root = new Node(null, '');

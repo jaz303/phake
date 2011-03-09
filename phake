@@ -39,12 +39,13 @@ try {
 	$cli_task_names = array();
 	foreach ($parser->get_non_options() as $option) {
 		if (strpos($option, '=') > 0) {
-			list($k, $v) = explode('=', $option);
-			$cli_args[$k] = $v;
+			$cli_args[] = $option;
 		} else {
 			$cli_task_names[] = $option;
 		}
 	}
+	
+	$cli_args = phake\Utils::parse_args($cli_args);
 	
 	if (count($cli_task_names)) {
 		$task_names = $cli_task_names;
