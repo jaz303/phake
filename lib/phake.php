@@ -11,7 +11,7 @@ class Utils
         $pos = 0;
         foreach ($args as $arg) {
             list($k, $v) = explode('=', $arg);
-            if (empty($v)) {
+            if (!isset($v)) {
                 $out[$pos++] = $k;
             } else {
                 $out[$k] = $v;
