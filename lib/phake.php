@@ -16,7 +16,7 @@ class Utils
             } else {
                 $out[$k] = $v;
             }
-		}
+        }
         return $out;
     }
 }
@@ -28,7 +28,7 @@ class Application implements \ArrayAccess, \IteratorAggregate
     
     public function __construct() {
         $this->root = new Node(null, '');
-                $this->args = array();
+        $this->args = array();
     }
     
     public function root() {
