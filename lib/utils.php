@@ -34,4 +34,4 @@ function fatal($exception, $message = null) {
     }
     die(1);
 }
-?>
+
