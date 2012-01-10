@@ -39,12 +39,47 @@ namespace phake {
 namespace {
 
     /**
-     * Halt the build, throwing an exception
+     * Fails the build, by throwing an exception
      * @param m the error message
      */
-    function halt($m) {
+    function fail($m) {
         throw new Exception($m);
     }
 
+    /**
+     * 'echo' ends with a new line
+     */
+    function println() {
+        echo implode(func_get_args()), "\n";
+    }
+
+    /**
+     * mkdir -p
+     */
+    function mk_dir($dir, $mod=0755, $failOnErr=true) {
+        if (!is_dir($dir) && !mkdir($dir, $mod, true) && $failOnErr) fail("mkdir '$dir' failed");
+    }
+
+    /**
+     * 'copy' with overwirting options
+     */
+    function cp_file($src, $dest, $overwrite=false) {
+        if (!file_exists($dest) || $overwrite) copy($src, $dest);
+    }
+
+    /**
+     * generate text file with a given template, with simple variable replaceing.
+     */
+    function gen_file($dest, $tpl, $vars=array(), $overwrite=false) {
+        if (!file_exists($dest) || $overwrite) {
+            $content = file_get_contents($tpl);
+
+            foreach ($vars as $var => $value) {
+                $content = str_replace($var, $value, $content);
+            }
+
+            file_put_contents($dest, $content);
+        }
+    }
 }
 ?>
