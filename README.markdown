@@ -169,7 +169,12 @@ And the corresponding output from `phake -T`:
     environment     Load the application environment
     test:all:run    Run absolutely every test everywhere!
     test:units      Run the unit tests
-    
+
+Bash Autocompletion
+-------------------
+
+Bashkim Isai has created [`phake-autocomplete`](https://github.com/bashaus/phake-autocomplete), a bash-completion script for phake task names.
+
 Known Bugs
 ----------
 
