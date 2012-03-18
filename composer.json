@@ -1,8 +1,8 @@
 {
-  "name": "proem/phake",
+  "name": "jaz303/phake",
   "description": "A wee clone of Ruby's rake for PHP 5.3. Uses closures for ultimate coolness.",
   "keywords": ["Tasks","CLI"],
-  "homepage": "http://github.com/proem/phake",
+  "homepage": "http://github.com/jaz303/phake",
   "type": "library",
   "license": "MIT",
   "authors": [
