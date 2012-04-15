@@ -1,10 +1,10 @@
 #!/usr/bin/env php
 <?php
-require dirname(__FILE__) . '/lib/phake.php';
-require dirname(__FILE__) . '/lib/utils.php';
-require dirname(__FILE__) . '/lib/global_helpers.php';
-require dirname(__FILE__) . '/lib/option_parser.php';
-require dirname(__FILE__) . '/lib/builder.php';
+require dirname(__FILE__) . '/../lib/phake.php';
+require dirname(__FILE__) . '/../lib/utils.php';
+require dirname(__FILE__) . '/../lib/global_helpers.php';
+require dirname(__FILE__) . '/../lib/option_parser.php';
+require dirname(__FILE__) . '/../lib/builder.php';
 
 phake\Builder::$global = new phake\Builder;
 
