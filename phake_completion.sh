@@ -4,19 +4,14 @@ _phake()
     COMPREPLY=()
 
     local cur prev
-    cur="${COMP_WORDS[COMP_CWORD]}"
-    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    _get_comp_words_by_ref -n : cur prev
 
     local opts
     opts=`phake -T | awk 'BEGIN {x=1}; $x>1 {print $1}'`
-    optscolon=${cur%"${cur##*:}"}
 
     COMPREPLY=( $(compgen -W "${opts}"  -- ${cur}))
 
-    local i=${#COMPREPLY[*]}
-    while [ $((--i)) -ge 0 ]; do
-        COMPREPLY[$i]=${COMPREPLY[$i]#"$optscolon"}
-    done
+    __ltrim_colon_completions "$cur"
 }
 
 complete -F _phake phake
