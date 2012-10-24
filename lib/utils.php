@@ -18,7 +18,9 @@ function resolve_runfile($directory) {
 }
 
 function load_runfile($file) {
-    require $file;
+    if (file_exists($file)) {
+        require $file;
+    }
 }
 
 function fatal($exception, $message = null) {
