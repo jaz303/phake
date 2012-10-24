@@ -9,14 +9,15 @@ require dirname(__FILE__) . '/../lib/builder.php';
 phake\Builder::$global = new phake\Builder;
 
 try {
-    
+
     //
     // Defaults
-    
+
     $action     = 'invoke';
     $task_names = array('default');
     $trace      = false;
-    
+    $runfile    = false;
+
     $args = $GLOBALS['argv'];
     array_shift($args);
     $parser = new phake\OptionParser($args);
@@ -30,11 +31,15 @@ try {
             case 'tasks':
                 $action = 'list';
                 break;
+            case 'f':
+            case 'file':
+                $runfile = $value;
+                break;
             default:
                 throw new Exception("Unknown command line option '$option'");
         }
     }
-    
+
     $cli_args = array();
     $cli_task_names = array();
     foreach ($parser->get_non_options() as $option) {
@@ -44,34 +49,35 @@ try {
             $cli_task_names[] = $option;
         }
     }
-    
+
     $cli_args = phake\Utils::parse_args($cli_args);
-    
+
     if (count($cli_task_names)) {
         $task_names = $cli_task_names;
     }
-    
+
     //
     // Locate runfile
-    
-    $runfile = phake\resolve_runfile(getcwd());
-    $directory = dirname($runfile);
+    if (!$runfile) {
+        $runfile = phake\resolve_runfile(getcwd());
+        $directory = dirname($runfile);
 
-    if (!@chdir($directory)) {
-        throw new Exception("Couldn't change to directory '$directory'");
-    } else {
-        echo "(in $directory)\n";
+        if (!@chdir($directory)) {
+            throw new Exception("Couldn't change to directory '$directory'");
+        } else {
+            echo "(in $directory)\n";
+        }
     }
 
     phake\load_runfile($runfile);
 
     //
     // Go, go, go
-    
+
     $application = phake\Builder::$global->get_application();
     $application->set_args($cli_args);
     $application->reset();
-    
+
     switch ($action) {
         case 'list':
             $task_list = $application->get_task_list();
