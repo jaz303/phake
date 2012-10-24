@@ -22,7 +22,6 @@ try {
     array_shift($args);
     $parser = new phake\OptionParser($args);
     foreach ($parser->get_options() as $option => $value) {
-        echo "$option => $value\n";
         switch ($option) {
             case 't':
             case 'trace':
