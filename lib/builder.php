@@ -22,6 +22,11 @@ class Builder
     public function desc($d) {
         $this->description = $d;
     }
+
+    public function clear() {
+        $this->application->clear();
+        $this->context = $this->application->root();
+    }
     
     public function add_task($name, $work, $deps) {
         $node = $this->context->child_with_name($name);
