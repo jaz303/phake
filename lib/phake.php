@@ -39,6 +39,10 @@ class Application implements \ArrayAccess, \IteratorAggregate
         $this->resolve($task_name, $relative_to)->invoke($this);
     }
     
+    public function clear() {
+        $this->root = new Node(null, '');
+    }
+
     public function reset() {
         $this->root->reset();
     }
