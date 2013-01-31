@@ -6,14 +6,19 @@
  *      write( red('star'), green('leaf'), blue('sky'), yellow('stone'), 'or', bold('bolded text') );
  * 
  */
-define('TPUT_RESET', '$(tput sgr0)');
 
+define('TPUT_RESET', '$(tput sgr0)');
+define('OUTPUT_IS_TTY', posix_isatty(STDOUT));
 function color($str, $color) {
-    return '$(tput setaf '.$color.')' . $str . TPUT_RESET;
+    return OUTPUT_IS_TTY ?
+        '$(tput setaf '.$color.')' . $str . TPUT_RESET :
+        $str;
 }
 
 function bold($str) {
-    return '$(tput bold)' . $str . TPUT_RESET;
+    return OUTPUT_IS_TTY ?
+        '$(tput bold)' . $str . TPUT_RESET :
+        $str;
 }
 
 function red($str) {
@@ -39,6 +44,10 @@ function write() {
     }
     // just in case of a line with double quotes
     $str = implode(' ', $str);
-    $line = trim(addcslashes($str, '"'));
-    echo `echo "$line"`;
+    $str = trim(addcslashes($str, '"'));
+    if (OUTPUT_IS_TTY) {
+        echo `echo "$str"`;
+    } else {
+        echo "$str\n";
+    }
 }
