@@ -37,6 +37,8 @@ function write() {
     foreach(func_get_args() as $part) {
         $str[] = trim($part);
     }
+    // just in case of a line with double quotes
     $str = implode(' ', $str);
-    echo `echo $str`;
+    $line = trim(addcslashes($str, '"'));
+    echo `echo "$line"`;
 }

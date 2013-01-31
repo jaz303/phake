@@ -100,4 +100,3 @@ try {
 } catch (Exception $e) {
     phake\fatal($e);
 }
-?>

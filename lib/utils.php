@@ -27,7 +27,7 @@ function fatal($exception, $message = null) {
     echo "aborted!\n";
     if (!$message) $message = $exception->getMessage();
     if (!$message) $message = get_class($exception);
-    echo $message . "\n\n";
+    write(red($message), "\n\n");
     global $trace;
     if ($trace) {
         echo $exception->getTraceAsString() . "\n";
@@ -36,4 +36,3 @@ function fatal($exception, $message = null) {
     }
     die(1);
 }
-?>

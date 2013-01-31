@@ -31,4 +31,5 @@ function after($task, $lambda) {
 function desc($description) {
     builder()->desc($description);
 }
-?>
+
+require_once 'bash_colors.php';

@@ -1,8 +1,21 @@
 <?php
+desc('Show some colors');
+task('colors', function() {
+    write(
+        'Using colors:',
+        red('red star,'), "\n",
+        green('green leaf,'), "\n",
+        blue('blue sky,'), "\n",
+        yellow('yellow stone,'), "\n",
+        bold('"bolded text"'),
+        green("and a text with \nnew line!")
+    );
+});
+
 desc('Dump all args');
 task('args', function($app) {
     echo "Arguments:\n";
-    foreach ($app as $k => $v) echo "$k = $v\n";
+    foreach ($app as $k => $v) write(yellow($k), '=', green($v));
 });
 
 desc('Load the application environment');
@@ -29,7 +42,7 @@ group('test', function() {
     // executing tasks
     group('all', function() {
         desc('Run absolutely every test everywhere!');
-        task('run', 'test:units', function($application) {
+        task('run', 'test:units', 'colors', function($application) {
             echo "All tests complete! ($application)\n";
         });
     });
@@ -55,4 +68,3 @@ group('test', function() {
 });
 
 task('default', 'test:all:run');
-?>
