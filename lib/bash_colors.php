@@ -82,6 +82,6 @@ function write() {
     if (OUTPUT_IS_TTY) {
         echo `echo "$str"`;
     } else {
-        echo "$str\n";
+        echo stripslashes("$str\n");
     }
 }
