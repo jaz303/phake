@@ -1,12 +1,15 @@
 <?php
 desc('Show some colors');
 task('colors', function() {
+    write('Running a test of color codes...');
     write(
-        'Using colors:',
-        red('red star,'), "\n",
+        red('Red star,'), "\n",
         green('green leaf,'), "\n",
         blue('blue sky,'), "\n",
         yellow('yellow stone,'), "\n",
+        cyan('cyanide,'), "\n",
+        black('black hole,'), "\n",
+        purple('purple rain,'), "\n",
         white('"bolded text"', true),
         green("and a text with \nnew line!")
     );

@@ -19,15 +19,17 @@ $_COLORS = array(
     'white' => '37'
 );
 
-
+// Const for TTY detection result
 define('OUTPUT_IS_TTY', posix_isatty(STDOUT));
+
 function color($str, $color, $bold = false) {
     global $_COLORS;
     $code = $_COLORS[$color];
     $bold = (int)$bold;
+    // black color will output with a background for readability. Is this OK?
+    $bg = $color == 'black' ? "\033[47m" : '';
     return OUTPUT_IS_TTY ?
-        "\033[{$bold};{$code}m{$str}\033[0m":
-        
+        "\033[{$bold};{$code}m{$bg}{$str}\033[0m":
         $str;
 }
 
@@ -55,6 +57,18 @@ function blue($str, $bold = false) {
 
 function yellow($str, $bold = false) {
     return color($str, 'yellow', $bold);
+}
+
+function cyan($str, $bold = false) {
+    return color($str, 'cyan', $bold);
+}
+
+function purple($str, $bold = false) {
+    return color($str, 'purple', $bold);
+}
+
+function black($str, $bold = false) {
+    return color($str, 'black', $bold);
 }
 
 function write() {
