@@ -7,7 +7,7 @@ task('colors', function() {
         green('green leaf,'), "\n",
         blue('blue sky,'), "\n",
         yellow('yellow stone,'), "\n",
-        bold('"bolded text"'),
+        white('"bolded text"', true),
         green("and a text with \nnew line!")
     );
 });

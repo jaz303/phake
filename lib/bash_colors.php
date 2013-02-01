@@ -4,37 +4,57 @@
  * Usage inside tasks:
  * 
  *      write( red('star'), green('leaf'), blue('sky'), yellow('stone'), 'or', bold('bolded text') );
- * 
+ *
+ * @see http://en.wikipedia.org/wiki/ANSI_escape_code#Colors
  */
 
-define('TPUT_RESET', '$(tput sgr0)');
+$_COLORS = array(
+    'black' => '30',
+    'blue' => '34',
+    'green' => '32',
+    'cyan' => '36',
+    'red' => '31',
+    'purple' => '35',
+    'yellow' => '33',
+    'white' => '37'
+);
+
+
 define('OUTPUT_IS_TTY', posix_isatty(STDOUT));
-function color($str, $color) {
+function color($str, $color, $bold = false) {
+    global $_COLORS;
+    $code = $_COLORS[$color];
+    $bold = (int)$bold;
     return OUTPUT_IS_TTY ?
-        '$(tput setaf '.$color.')' . $str . TPUT_RESET :
+        "\033[{$bold};{$code}m{$str}\033[0m":
+        
         $str;
 }
 
 function bold($str) {
     return OUTPUT_IS_TTY ?
-        '$(tput bold)' . $str . TPUT_RESET :
+        "\033[1m{$str}\033[2m" :
         $str;
 }
 
-function red($str) {
-    return color($str, 1);
+function white($str, $bold = false) {
+    return color($str, 'white', $bold);
 }
 
-function green($str) {
-    return color($str, 2);
+function red($str, $bold = false) {
+    return color($str, 'red', $bold);
 }
 
-function blue($str) {
-    return color($str, 4);
+function green($str, $bold = false) {
+    return color($str, 'green', $bold);
 }
 
-function yellow($str) {
-    return color($str, 3);
+function blue($str, $bold = false) {
+    return color($str, 'blue', $bold);
+}
+
+function yellow($str, $bold = false) {
+    return color($str, 'yellow', $bold);
 }
 
 function write() {
