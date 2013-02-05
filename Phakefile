@@ -1,8 +1,8 @@
 <?php
 desc('Show some colors');
 task('colors', function() {
-    write('Running a test of color codes...');
-    write(
+    writeln('Running a test of color codes...');
+    writeln(
         red('Red star,'), "\n",
         green('green leaf,'), "\n",
         blue('blue sky,'), "\n",

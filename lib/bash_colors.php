@@ -22,6 +22,12 @@ $_COLORS = array(
 // Const for TTY detection result
 define('OUTPUT_IS_TTY', posix_isatty(STDOUT));
 
+/**
+ * Generates a string with ANSI format codes
+ * @param string $str
+ * @param string color
+ * @param bool $bold
+ */
 function color($str, $color, $bold = false) {
     global $_COLORS;
     $code = $_COLORS[$color];
@@ -71,17 +77,50 @@ function black($str, $bold = false) {
     return color($str, 'black', $bold);
 }
 
-function write() {
+/**
+ * Gets a list of strings and return a escaped string to output
+ * @private
+ * @param string message...
+ * @return string
+ */
+function cleanupStrings($args) {
     $str = array();
-    foreach(func_get_args() as $part) {
+    foreach($args as $part) {
         $str[] = trim($part);
     }
+    
     // just in case of a line with double quotes
     $str = implode(' ', $str);
-    $str = trim(addcslashes($str, '"'));
+    $str = trim($str);
+    return $str;
+}
+
+/**
+ * Send output to pipe or stdout
+ * @private
+ */
+function output($str) {
     if (OUTPUT_IS_TTY) {
-        echo `echo "$str"`;
+        fwrite(\STDOUT, $str);
     } else {
-        echo stripslashes("$str\n");
+        echo stripslashes($str);
     }
+}
+
+/**
+ * Writes output
+ * @param string $str...
+ */
+function write() {
+    $str = cleanupStrings(func_get_args());
+    output($str);
+}
+
+/**
+ * Writes output and starts a new line
+ * @param string $str...
+ */
+function writeln() {
+    $str = cleanupStrings(func_get_args()) . "\n";
+    output($str);
 }
