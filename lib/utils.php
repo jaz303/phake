@@ -36,3 +36,7 @@ function fatal($exception, $message = null) {
     }
     die(1);
 }
+
+function is_tty() {
+    return posix_isatty(STDOUT);
+}

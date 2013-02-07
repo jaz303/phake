@@ -32,4 +32,30 @@ function desc($description) {
     builder()->desc($description);
 }
 
-require_once 'bash_colors.php';
+/**
+ * Writes arguments to stdout, each separated by a space
+ * @param string $str...
+ */
+function write() {
+    $out = '';
+    $was_newline = true;
+    foreach (func_get_args() as $ix => $str) {
+        if (!$was_newline) {
+            $out .= ' ';
+        }
+        $out .= $str;
+        $was_newline = $str[strlen($str)-1] == "\n";
+    }
+    fwrite(STDOUT, $out);
+}
+
+/**
+ * Writes arguments to stdout, each separated by a space, then starts a new line
+ * @param string $str...
+ */
+function writeln() {
+    call_user_func_array('write', func_get_args());
+    fwrite(STDOUT, "\n");
+}
+
+require_once 'term_colors.php';
