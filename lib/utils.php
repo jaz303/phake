@@ -1,11 +1,14 @@
 <?php
 namespace phake;
 
-function resolve_runfile($directory) {
-    $runfiles = array('Phakefile', 'Phakefile.php');
+function resolve_runfile($directory, $taskFiles = NULL) {
+	
+    $runfiles = ( $taskFiles == NULL ) ? array('Phakefile', 'Phakefile.php') : $taskFiles;
+    
     do {
         foreach ($runfiles as $r) {
             $candidate = $directory . '/' . $r;
+            
             if (file_exists($candidate)) {
                 return $candidate;
             }
