@@ -56,20 +56,33 @@ try {
         $task_names = $cli_task_names;
     }
 
-    //
     // Locate runfile
     if (!$runfile) {
-        $runfile = phake\resolve_runfile(getcwd());
-        $directory = dirname($runfile);
-
-        if (!@chdir($directory)) {
-            throw new Exception("Couldn't change to directory '$directory'");
-        } else {
-            echo "(in $directory)\n";
-        }
+    	
+    	foreach ($task_names as &$task){
+    		$taskNameParts = explode(':', $task);
+    		
+    		$taskDirectory = array_shift($taskNameParts);
+    		
+    		$phakeFiles = array($taskDirectory, $taskDirectory.'.php');
+    		
+    		$runfile = phake\resolve_runfile(getcwd()."/tasks", $phakeFiles);
+    		$directory = dirname($runfile);
+    		
+    		$task = implode(":", $taskNameParts);
+    		
+    		if (!@chdir($directory)) {
+    			throw new Exception("Couldn't change to directory '$directory'");
+    		} else {
+    			echo "(in $directory)\n";
+    		}
+    		
+    		phake\load_runfile($runfile);
+    	}
+    	
+    }else{
+    	phake\load_runfile($runfile);
     }
-
-    phake\load_runfile($runfile);
 
     //
     // Go, go, go
