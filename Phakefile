@@ -70,4 +70,9 @@ group('test', function() {
     
 });
 
+desc('Demonstrate failure');
+task('fail', function() {
+    throw new Exception;
+});
+
 task('default', 'test:all:run');

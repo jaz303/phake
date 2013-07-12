@@ -92,6 +92,25 @@ Arguments are made available to tasks by the application object's `ArrayAccess` 
         // do some stuff...
     });
 
+Aborting Execution
+------------------
+
+To abort execution of a task sequence, simply throw an exception.
+
+    desc('Demonstrate failure');
+    task('fail', function() {
+        throw new Exception;
+    });
+    
+Running `rake fail` will yield:
+
+    - jason@disco phake % ./bin/phake fail
+    (in /Users/jason/dev/projects/phake)
+    aborted!
+    Exception 
+
+    (See full trace by running task with --trace)
+
 A Somewhat More Complete Example
 --------------------------------
 
