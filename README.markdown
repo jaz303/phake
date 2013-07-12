@@ -102,7 +102,7 @@ To abort execution of a task sequence, simply throw an exception.
         throw new Exception;
     });
     
-Running `rake fail` will yield:
+Running `phake fail` will yield:
 
     - jason@disco phake % ./bin/phake fail
     (in /Users/jason/dev/projects/phake)
