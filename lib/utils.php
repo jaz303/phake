@@ -38,5 +38,5 @@ function fatal($exception, $message = null) {
 }
 
 function is_tty() {
-    return posix_isatty(STDOUT);
+    return function_exists('posix_isatty') ? posix_isatty(STDOUT) : false;
 }
