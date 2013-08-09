@@ -16,7 +16,7 @@ class Application implements \ArrayAccess, \IteratorAggregate
         return $this->root;
     }
 
-    public function invoke($task_name, $relative_to = null) {
+    public function invoke($task_name, Node $relative_to = null) {
         $this->resolve($task_name, $relative_to)->invoke($this);
     }
 
@@ -28,7 +28,7 @@ class Application implements \ArrayAccess, \IteratorAggregate
         $this->root->reset();
     }
 
-    public function resolve($task_name, $relative_to = null) {
+    public function resolve($task_name, Node $relative_to = null) {
         if ($task_name[0] != ':') {
             if ($relative_to) {
                 try {
