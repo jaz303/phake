@@ -57,5 +57,3 @@ function writeln() {
     call_user_func_array('write', func_get_args());
     fwrite(STDOUT, "\n");
 }
-
-require_once 'term_colors.php';
