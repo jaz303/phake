@@ -11,8 +11,6 @@ use Exception;
 class Bin
 {
     public function execute($args) {
-        Builder::$global = new Builder;
-
         try {
 
             //
@@ -78,7 +76,8 @@ class Bin
             //
             // Go, go, go
 
-            $application = Builder::$global->get_application();
+            $application = builder()->get_application();
+            /* @var $application Application */
             $application->set_args($cli_args);
             $application->reset();
 

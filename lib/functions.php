@@ -1,6 +1,9 @@
 <?php
 function builder() {
-    return \Phake\Builder::$global;
+    if (!isset(phake\Builder::$global)) {
+        phake\Builder::$global = new phake\Builder;
+    }
+    return phake\Builder::$global;
 }
 
 function task() {
