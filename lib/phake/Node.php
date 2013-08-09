@@ -88,11 +88,23 @@ class Node
     }
 
     public function fill_task_list(&$out, $prefix = '') {
-        foreach ($this->children as $name => $child) {
-            if ($desc = $child->get_description()) {
-                $out[$prefix . $name] = $desc;
+        foreach ($this->get_tasks() as $name => $node) {
+            if ($desc = $node->get_description()) {
+                $out[$name] = $desc;
             }
-            $child->fill_task_list($out, "{$prefix}{$name}:");
         }
+    }
+
+    public function get_tasks() {
+        $tasks = array();
+
+        foreach ($this->children as $child) {
+            if ($child->tasks) {
+                $tasks[$child->get_name()] = $child;
+            }
+            $tasks += $child->get_tasks();
+        }
+
+        return $tasks;
     }
 }
