@@ -38,24 +38,21 @@ class Node
         return $this->parent;
     }
 
+    public function get_root() {
+        $root = $this;
+
+        while ($root->parent !== null) {
+            $root = $root->parent;
+        }
+
+        return $root;
+    }
+
     public function child_with_name($name) {
         if (!isset($this->children[$name])) {
             $this->children[$name] = new Node($this, $name);
         }
         return $this->children[$name];
-    }
-
-    public function resolve(array $task_name_parts) {
-        if (count($task_name_parts) == 0) {
-            return $this;
-        } else {
-            $try = array_shift($task_name_parts);
-            if (isset($this->children[$try])) {
-                return $this->children[$try]->resolve($task_name_parts);
-            } else {
-                throw new TaskNotFoundException;
-            }
-        }
     }
 
     public function add_before($closure) { $this->before[]  = $closure; }
@@ -81,7 +78,7 @@ class Node
     }
 
     public function invoke(Application $application) {
-        foreach ($this->deps as $d) $application->invoke($d, $this->get_parent());
+        foreach ($this->get_dependencies() as $t) $t->invoke($application);
 
         if ($this->has_run) {
             return;
@@ -100,6 +97,45 @@ class Node
                 $out[$name] = $desc;
             }
         }
+    }
+
+    public function get_dependencies(){
+        $deps = array();
+
+        foreach ($this->deps as $depName) {
+            $task = $this->get_task($depName);
+            $deps[$task->get_name()] = $task;
+        }
+
+        return $deps;
+    }
+
+    public function get_task($task_name) {
+        if ($task_name[0] != ':') {
+            $parts = explode(':', $task_name);
+
+            $task = $this;
+            foreach ($parts as $part) {
+                if (isset($task->children[$part])) {
+                    $task = $task->children[$part];
+                } else {
+                    $task = null;
+                    break;
+                }
+            }
+            if ($task !== null) {
+                return $task;
+            }
+        } else {
+            $task_name = substr($task_name, 1);
+        }
+
+        $root = $this->get_root();
+        if ($root === $this) {
+            throw new TaskNotFoundException;
+        }
+
+        return $root->get_task($task_name);
     }
 
     public function get_tasks() {
