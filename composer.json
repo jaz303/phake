@@ -16,9 +16,9 @@
       "phake": "lib/"
     },
     "files": [
-      "lib/global_helpers.php",
+      "lib/functions.php",
       "lib/term_colors.php",
-      "lib/phake/utils.php"
+      "lib/phake/functions.php"
     ]
   },
   "bin": ["bin/phake"],
