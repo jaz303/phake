@@ -13,7 +13,7 @@ class Node
 
     private $children   = array();
 
-    public function __construct($parent, $name) {
+    public function __construct(Node $parent = null, $name = '') {
         $this->parent = $parent;
         $this->name = $name;
     }
@@ -41,7 +41,7 @@ class Node
         return $this->children[$name];
     }
 
-    public function resolve($task_name_parts) {
+    public function resolve(array $task_name_parts) {
         if (count($task_name_parts) == 0) {
             return $this;
         } else {
@@ -80,7 +80,7 @@ class Node
         foreach ($this->children as $c) $c->reset();
     }
 
-    public function invoke($application) {
+    public function invoke(Application $application) {
         foreach ($this->dependencies() as $d) $application->invoke($d, $this->get_parent());
         foreach ($this->before as $t) $t->invoke($application);
         foreach ($this->tasks as $t) $t->invoke($application);

@@ -31,7 +31,7 @@ class Task
         $this->has_run = false;
     }
 
-    public function invoke($application) {
+    public function invoke(Application $application) {
         if (!$this->has_run) {
             if ($this->lambda) {
                 $lambda = $this->lambda;
