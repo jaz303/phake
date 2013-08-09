@@ -22,8 +22,16 @@ class Node
         $this->name = $name;
     }
 
-    public function get_name($name) {
-        return $this->name;
+    public function get_name() {
+        $name = '';
+
+        $parent = $this->parent;
+        while ($parent !== null && $parent->parent !== null) {
+            $name .= $parent->name . ':';
+            $parent = $parent->parent;
+        }
+
+        return $name . $this->name;
     }
 
     public function get_parent() {
