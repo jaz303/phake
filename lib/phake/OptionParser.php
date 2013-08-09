@@ -1,4 +1,5 @@
 <?php
+
 namespace phake;
 
 //
@@ -17,20 +18,20 @@ class OptionParser
     private $index = 0;
     private $options;
     private $non_options;
-    
+
     public function __construct($args) {
         $this->args = $args;
         $this->parse();
     }
-    
+
     public function get_options() {
         return $this->options;
     }
-    
+
     public function get_non_options() {
         return $this->non_options;
     }
-    
+
     protected function parse() {
         $this->options      = array();
         $this->non_options  = array();
@@ -62,7 +63,7 @@ class OptionParser
             }
         }
     }
-    
+
     protected function append_option($option) {
         if (isset($this->options[$option])) {
             $this->options[$option] = (array) $this->options[$option];
@@ -71,7 +72,7 @@ class OptionParser
             $this->options[$option] = false;
         }
     }
-    
+
     protected function set_option_value($option, $value) {
         if (is_array($this->options[$option])) {
             $len = count($this->options[$option]);
@@ -80,7 +81,7 @@ class OptionParser
             $this->options[$option] = $value;
         }
     }
-    
+
     protected function next() {
         if ($this->index == count($this->args)) {
             return false;

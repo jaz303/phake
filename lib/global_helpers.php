@@ -1,6 +1,9 @@
 <?php
 function builder() {
-    return \Phake\Builder::$global;
+    if (!isset(phake\Builder::$global)) {
+        phake\Builder::$global = new phake\Builder;
+    }
+    return phake\Builder::$global;
 }
 
 function task() {
@@ -57,5 +60,3 @@ function writeln() {
     call_user_func_array('write', func_get_args());
     fwrite(STDOUT, "\n");
 }
-
-require_once 'term_colors.php';

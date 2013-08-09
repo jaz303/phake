@@ -1,4 +1,5 @@
 <?php
+
 namespace phake;
 
 function resolve_runfile($directory) {
