@@ -41,6 +41,10 @@ class Application implements \ArrayAccess, \IteratorAggregate
         return $this->root->resolve(explode(':', $task_name));
     }
 
+    public function get_tasks() {
+        return $this->root->get_tasks();
+    }
+
     public function get_task_list() {
         $list = array();
         $this->root->fill_task_list($list);
