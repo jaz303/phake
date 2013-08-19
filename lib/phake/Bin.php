@@ -58,10 +58,13 @@ class Bin
                 $task_names = $cli_task_names;
             }
 
+            $builder = builder();
+            /* @var $builder Builder */
+
             //
             // Locate runfile
             if (!$runfile) {
-                $runfile = resolve_runfile(getcwd());
+                $runfile = $builder->resolve_runfile(getcwd());
                 $directory = dirname($runfile);
 
                 if (!@chdir($directory)) {
@@ -71,13 +74,11 @@ class Bin
                 }
             }
 
-            load_runfile($runfile);
+            $builder->load_runfile($runfile);
 
             //
             // Go, go, go
-
-            $application = builder()->get_application();
-            /* @var $application Application */
+            $application = $builder->get_application();
             $application->set_args($cli_args);
             $application->reset();
 
@@ -99,9 +100,22 @@ class Bin
             }
 
         } catch (TaskNotFoundException $tnfe) {
-            fatal($tnfe, "Don't know how to build task '$task_name'\n");
+            $this->fatal($tnfe, "Don't know how to build task '$task_name'\n", $trace);
         } catch (Exception $e) {
-            fatal($e);
+            $this->fatal($e, null, $trace);
         }
+    }
+
+    private function fatal($exception, $message = null, $trace = false) {
+        echo "aborted!\n";
+        if (!$message) $message = $exception->getMessage();
+        if (!$message) $message = get_class($exception);
+        write(red($message), "\n\n");
+        if ($trace) {
+           echo $exception->getTraceAsString() . "\n";
+        } else {
+            echo "(See full trace by running task with --trace)\n";
+        }
+        die(1);
     }
 }
