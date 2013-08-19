@@ -61,4 +61,27 @@ class Builder
             $this->description = null;
         }
     }
+
+    public function resolve_runfile($directory) {
+        $directory = rtrim($directory, '/') . '/';
+        $runfiles = array('Phakefile', 'Phakefile.php');
+        do {
+            foreach ($runfiles as $r) {
+                $candidate = $directory . $r;
+                if (file_exists($candidate)) {
+                    return $candidate;
+                }
+            }
+            if ($directory == '/') {
+                throw new \Exception("No Phakefile found");
+            }
+            $directory = dirname($directory);
+        } while (true);
+    }
+
+    public function load_runfile($file) {
+        if (file_exists($file)) {
+            require $file;
+        }
+    }
 }
