@@ -81,6 +81,11 @@ class Node
 
         foreach ($this->before  as $t) $t($application);
         foreach ($this->lambdas as $t) $t($application);
+
+        foreach ($this->children as $c) {
+            $c->invoke($application);
+        }
+
         foreach ($this->after   as $t) $t($application);
 
         $this->has_run = true;
