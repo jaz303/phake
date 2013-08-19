@@ -86,9 +86,7 @@ class Node
 
     public function fill_task_list(&$out, $prefix = '') {
         foreach ($this->get_tasks() as $name => $node) {
-            if ($desc = $node->get_description()) {
-                $out[$name] = $desc;
-            }
+            $out[$name] = $node->get_description();
         }
     }
 
