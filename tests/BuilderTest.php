@@ -43,4 +43,27 @@ class BuilderTest extends TestCase
 
         // assert there's a single task "default"
     }
+
+    public function testOrder()
+    {
+        $builder = new Builder();
+
+        $builder->load_runfile($this->getFixture('Order.php'));
+
+        $this->expectOutputString(<<<EOF
+0
+1
+2
+3
+4
+5
+6
+7
+8
+
+EOF
+);
+
+        $builder->get_application()->invoke('default');
+    }
 }
