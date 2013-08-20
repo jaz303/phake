@@ -83,6 +83,9 @@ class Builder
     }
 
     public function load_runfile($file) {
+        // set global reference for builder() helper as used in Phakefiles
+        self::$global = $this;
+
         if (file_exists($file)) {
             require $file;
         }
