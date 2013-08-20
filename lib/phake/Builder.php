@@ -83,11 +83,13 @@ class Builder
     }
 
     public function load_runfile($file) {
+        if (!is_file($file)) {
+            throw new \Exception('The given path to the Phakefile does not exist');
+        }
+
         // set global reference for builder() helper as used in Phakefiles
         self::$global = $this;
 
-        if (file_exists($file)) {
-            require $file;
-        }
+        require $file;
     }
 }
