@@ -1,4 +1,4 @@
-phake - Rake/Make for PHP 5.3
+phake - Rake/Make for PHP 5.3 [![Build Status](https://travis-ci.org/jaz303/phake.png?branch=master)](https://travis-ci.org/jaz303/phake)
 =============================
 
 &copy; 2010 Jason Frame [ [jason@onehackoranother.com](mailto:jason@onehackoranother.com) / [@jaz303](http://twitter.com/jaz303) ]  
