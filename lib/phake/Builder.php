@@ -10,8 +10,11 @@ class Builder
     private $context;
     private $description;
 
-    public function __construct() {
-        $this->application = new Application;
+    public function __construct(Application $application = null) {
+        if ($application === null) {
+            $application = new Application;
+        }
+        $this->application = $application;
         $this->context = $this->application->root();
         $this->description = null;
     }
