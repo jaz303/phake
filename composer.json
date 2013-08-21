@@ -17,8 +17,7 @@
     },
     "files": [
       "lib/functions.php",
-      "lib/term_colors.php",
-      "lib/phake/functions.php"
+      "lib/term_colors.php"
     ]
   },
   "bin": ["bin/phake"],
