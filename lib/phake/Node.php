@@ -6,6 +6,7 @@ class Node
 {
     private $parent;
     private $name;
+    private $hidden = false;
 
     private $before     = array();
     private $tasks      = array();
@@ -84,14 +85,7 @@ class Node
         foreach ($this->after as $t) $t->invoke($application);
     }
 
-    public function fill_task_list(&$out, $prefix = '') {
-        foreach ($this->get_tasks() as $name => $node) {
-            $out[$name] = $node->get_description();
-        }
-    }
-
-    public function get_dependencies()
-    {
+    public function get_dependencies() {
         $deps = array();
 
         foreach ($this->dependencies() as $depName) {
@@ -100,6 +94,14 @@ class Node
         }
 
         return $deps;
+    }
+
+    public function has_dependencies() {
+        return !!$this->dependencies();
+    }
+
+    public function has_body() {
+        return !!$this->tasks;
     }
 
     public function get_task($task_name) {
@@ -128,6 +130,10 @@ class Node
         }
 
         return $root->get_task($task_name);
+    }
+
+    public function is_visible() {
+        return (!$this->hidden && ($this->has_body() || $this->has_dependencies()));
     }
 
     public function get_tasks() {
