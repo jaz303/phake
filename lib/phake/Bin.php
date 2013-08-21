@@ -58,8 +58,8 @@ class Bin
                 $task_names = $cli_task_names;
             }
 
-            $builder = builder();
-            /* @var $builder Builder */
+            $application = new Application();
+            $builder = new Builder($application);
 
             //
             // Locate runfile
@@ -78,7 +78,6 @@ class Bin
 
             //
             // Go, go, go
-            $application = $builder->get_application();
             $application->set_args($cli_args);
             $application->reset();
 
