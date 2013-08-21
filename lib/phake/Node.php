@@ -142,9 +142,7 @@ class Node
         $tasks = array();
 
         foreach ($this->children as $child) {
-            if ($child->tasks) {
-                $tasks[$child->get_name()] = $child;
-            }
+            $tasks[$child->get_name()] = $child;
             $tasks += $child->get_tasks();
         }
 
