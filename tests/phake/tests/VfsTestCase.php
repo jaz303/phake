@@ -1,4 +1,4 @@
-<?php namespace phake\test;
+<?php namespace phake\tests;
 
 use PHPUnit_Framework_TestCase;
 use org\bovigo\vfs\vfsStream;

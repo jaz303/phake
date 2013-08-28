@@ -14,7 +14,7 @@
   "autoload": {
     "psr-0": {
       "phake": "lib/",
-      "phake\\test": "test/"
+      "phake\\tests": "tests/"
     },
     "files": [
       "lib/functions.php",
