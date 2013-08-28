@@ -4,6 +4,11 @@ namespace phake;
 
 function resolve_runfile($directory) {
     $runfiles = array('Phakefile', 'Phakefile.php');
+
+    $runfiles = array_merge($runfiles, 
+        array_map('strtolower', $runfiles)
+    );
+
     do {
         foreach ($runfiles as $r) {
             $candidate = $directory . '/' . $r;
