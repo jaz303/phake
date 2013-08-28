@@ -2,7 +2,7 @@
 /**
  * Adds some message coloring to bash
  * Usage inside tasks:
- * 
+ *
  *      write( red('star'), green('leaf'), blue('sky'), yellow('stone'), 'or', bold('bolded text') );
  *
  * @see http://en.wikipedia.org/wiki/ANSI_escape_code#Colors
@@ -25,18 +25,18 @@ function colorize($str, $color, $bold = false) {
         'yellow' => '33',
         'white' => '37'
     );
-  
+
     $code = $colors[$color];
     $bold = (int)$bold;
     $bg = $color == 'black' ? "\033[47m" : '';
-    
-    return phake\is_tty() ?
+
+    return is_tty() ?
         "\033[{$bold};{$code}m{$bg}{$str}\033[0m":
         $str;
 }
 
 function bold($str) {
-    return phake\is_tty() ?
+    return is_tty() ?
         "\033[1m{$str}\033[2m" :
         $str;
 }
@@ -71,4 +71,8 @@ function purple($str, $bold = false) {
 
 function black($str, $bold = false) {
     return colorize($str, 'black', $bold);
+}
+
+function is_tty() {
+    return function_exists('posix_isatty') ? posix_isatty(STDOUT) : false;
 }

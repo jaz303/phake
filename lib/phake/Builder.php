@@ -10,8 +10,11 @@ class Builder
     private $context;
     private $description;
 
-    public function __construct() {
-        $this->application = new Application;
+    public function __construct(Application $application = null) {
+        if ($application === null) {
+            $application = new Application;
+        }
+        $this->application = $application;
         $this->context = $this->application->root();
         $this->description = null;
     }
@@ -60,5 +63,33 @@ class Builder
             $thing->set_description($this->description);
             $this->description = null;
         }
+    }
+
+    public function resolve_runfile($directory) {
+        $directory = rtrim($directory, '/') . '/';
+        $runfiles = array('Phakefile', 'Phakefile.php');
+        do {
+            foreach ($runfiles as $r) {
+                $candidate = $directory . $r;
+                if (file_exists($candidate)) {
+                    return $candidate;
+                }
+            }
+            if ($directory == '/') {
+                throw new \Exception("No Phakefile found");
+            }
+            $directory = dirname($directory);
+        } while (true);
+    }
+
+    public function load_runfile($file) {
+        if (!is_file($file)) {
+            throw new \Exception('The given path to the Phakefile does not exist');
+        }
+
+        // set global reference for builder() helper as used in Phakefiles
+        self::$global = $this;
+
+        require $file;
     }
 }
