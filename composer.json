@@ -13,7 +13,8 @@
   ],
   "autoload": {
     "psr-0": {
-      "phake": "lib/"
+      "phake": "lib/",
+      "phake\\test": "test/"
     },
     "files": [
       "lib/functions.php",
@@ -24,5 +25,9 @@
   "bin": ["bin/phake"],
   "require": {
     "php": ">=5.3.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*",
+    "mikey179/vfsStream": "*"
   }
 }
