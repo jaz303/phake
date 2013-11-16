@@ -34,9 +34,15 @@ class Builder
 
     public function add_task($name, $work, $deps) {
         $node = $this->context->child_with_name($name);
-        $task = new Task($work, $deps);
-        $this->assign_description($task);
-        $node->task($task);
+        /* @var $node phake\Node */
+
+        if ($work !== null) {
+            $node->add_lambda($work);
+        }
+        foreach ($deps as $dep) {
+            $node->add_dependency($dep);
+        }
+        $this->assign_description($node);
     }
 
     public function push_group($name) {
@@ -48,11 +54,11 @@ class Builder
     }
 
     public function before($name, $lambda) {
-        $this->application->resolve($name, $this->context)->before(new Task($lambda));
+        $this->application->resolve($name, $this->context)->add_before($lambda);
     }
 
     public function after($name, $lambda) {
-        $this->application->resolve($name, $this->context)->after(new Task($lambda));
+        $this->application->resolve($name, $this->context)->add_after($lambda);
     }
 
     //

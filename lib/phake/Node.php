@@ -7,8 +7,12 @@ class Node
     private $parent;
     private $name;
 
+    private $deps       = array();
+    private $desc       = null;
+    private $has_run    = false;
+
     private $before     = array();
-    private $tasks      = array();
+    private $lambdas    = array();
     private $after      = array();
 
     private $children   = array();
@@ -46,37 +50,40 @@ class Node
         }
     }
 
-    public function before(Task $task) { $this->before[] = $task; }
-    public function task(Task $task) { $this->tasks[] = $task; }
-    public function after(Task $task) { $this->after[] = $task; }
-
-    public function dependencies() {
-        $deps = array();
-        foreach ($this->tasks as $t) {
-            $deps = array_merge($deps, $t->dependencies());
-        }
-        return $deps;
-    }
+    public function add_before($closure) { $this->before[]  = $closure; }
+    public function add_lambda($closure) { $this->lambdas[] = $closure; }
+    public function add_after($closure)  { $this->after[]   = $closure; }
 
     public function get_description() {
-        foreach ($this->tasks as $t) {
-            if ($desc = $t->get_description()) return $desc;
-        }
-        return null;
+        return $this->desc;
+    }
+
+    public function set_description($d) {
+        $this->desc = $d;
+    }
+
+    public function add_dependency($taskname) {
+        $this->deps[] = $taskname;
     }
 
     public function reset() {
-        foreach ($this->before as $t) $t->reset();
-        foreach ($this->tasks as $t) $t->reset();
-        foreach ($this->after as $t) $t->reset();
+        $this->has_run = false;
+
         foreach ($this->children as $c) $c->reset();
     }
 
     public function invoke($application) {
-        foreach ($this->dependencies() as $d) $application->invoke($d, $this->get_parent());
-        foreach ($this->before as $t) $t->invoke($application);
-        foreach ($this->tasks as $t) $t->invoke($application);
-        foreach ($this->after as $t) $t->invoke($application);
+        foreach ($this->deps as $d) $application->invoke($d, $this->get_parent());
+
+        if ($this->has_run) {
+            return;
+        }
+
+        foreach ($this->before  as $t) $t($application);
+        foreach ($this->lambdas as $t) $t($application);
+        foreach ($this->after   as $t) $t($application);
+
+        $this->has_run = true;
     }
 
     public function fill_task_list(&$out, $prefix = '') {
