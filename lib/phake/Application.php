@@ -16,8 +16,8 @@ class Application implements \ArrayAccess, \IteratorAggregate
         return $this->root;
     }
 
-    public function invoke($task_name, $relative_to = null) {
-        $this->resolve($task_name, $relative_to)->invoke($this);
+    public function invoke($task_name) {
+        $this->get_task($task_name)->invoke($this);
     }
 
     public function clear() {
@@ -28,17 +28,12 @@ class Application implements \ArrayAccess, \IteratorAggregate
         $this->root->reset();
     }
 
-    public function resolve($task_name, $relative_to = null) {
-        if ($task_name[0] != ':') {
-            if ($relative_to) {
-                try {
-                    return $relative_to->resolve(explode(':', $task_name));
-                } catch (TaskNotFoundException $tnfe) {}
-            }
-        } else {
-            $task_name = substr($task_name, 1);
-        }
-        return $this->root->resolve(explode(':', $task_name));
+    public function get_task($task_name) {
+        return $this->root->get_task($task_name);
+    }
+
+    public function get_tasks() {
+        return $this->root->get_tasks();
     }
 
     public function get_task_list() {

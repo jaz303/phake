@@ -17,17 +17,35 @@ class Node
 
     private $children   = array();
 
-    public function __construct($parent, $name) {
+    public function __construct(Node $parent = null, $name = '') {
         $this->parent = $parent;
         $this->name = $name;
     }
 
-    public function get_name($name) {
-        return $this->name;
+    public function get_name() {
+        $name = '';
+
+        $parent = $this->parent;
+        while ($parent !== null && $parent->parent !== null) {
+            $name .= $parent->name . ':';
+            $parent = $parent->parent;
+        }
+
+        return $name . $this->name;
     }
 
     public function get_parent() {
         return $this->parent;
+    }
+
+    public function get_root() {
+        $root = $this;
+
+        while ($root->parent !== null) {
+            $root = $root->parent;
+        }
+
+        return $root;
     }
 
     public function child_with_name($name) {
@@ -35,19 +53,6 @@ class Node
             $this->children[$name] = new Node($this, $name);
         }
         return $this->children[$name];
-    }
-
-    public function resolve($task_name_parts) {
-        if (count($task_name_parts) == 0) {
-            return $this;
-        } else {
-            $try = array_shift($task_name_parts);
-            if (isset($this->children[$try])) {
-                return $this->children[$try]->resolve($task_name_parts);
-            } else {
-                throw new TaskNotFoundException;
-            }
-        }
     }
 
     public function add_before($closure) { $this->before[]  = $closure; }
@@ -72,8 +77,8 @@ class Node
         foreach ($this->children as $c) $c->reset();
     }
 
-    public function invoke($application) {
-        foreach ($this->deps as $d) $application->invoke($d, $this->get_parent());
+    public function invoke(Application $application) {
+        foreach ($this->get_dependencies() as $t) $t->invoke($application);
 
         if ($this->has_run) {
             return;
@@ -87,11 +92,60 @@ class Node
     }
 
     public function fill_task_list(&$out, $prefix = '') {
-        foreach ($this->children as $name => $child) {
-            if ($desc = $child->get_description()) {
-                $out[$prefix . $name] = $desc;
+        foreach ($this->get_tasks() as $name => $node) {
+            if ($desc = $node->get_description()) {
+                $out[$name] = $desc;
             }
-            $child->fill_task_list($out, "{$prefix}{$name}:");
         }
+    }
+
+    public function get_dependencies(){
+        $deps = array();
+
+        foreach ($this->deps as $depName) {
+            $task = $this->get_task($depName);
+            $deps[$task->get_name()] = $task;
+        }
+
+        return $deps;
+    }
+
+    public function get_task($task_name) {
+        if ($task_name[0] != ':') {
+            $parts = explode(':', $task_name);
+
+            $task = $this;
+            foreach ($parts as $part) {
+                if (isset($task->children[$part])) {
+                    $task = $task->children[$part];
+                } else {
+                    $task = null;
+                    break;
+                }
+            }
+            if ($task !== null) {
+                return $task;
+            }
+        } else {
+            $task_name = substr($task_name, 1);
+        }
+
+        $root = $this->get_root();
+        if ($root === $this) {
+            throw new TaskNotFoundException;
+        }
+
+        return $root->get_task($task_name);
+    }
+
+    public function get_tasks() {
+        $tasks = array();
+
+        foreach ($this->children as $child) {
+            $tasks[$child->get_name()] = $child;
+            $tasks += $child->get_tasks();
+        }
+
+        return $tasks;
     }
 }

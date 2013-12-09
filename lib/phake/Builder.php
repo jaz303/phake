@@ -54,11 +54,11 @@ class Builder
     }
 
     public function before($name, $lambda) {
-        $this->application->resolve($name, $this->context)->add_before($lambda);
+        $this->context->get_task($name)->add_before($lambda);
     }
 
     public function after($name, $lambda) {
-        $this->application->resolve($name, $this->context)->add_after($lambda);
+        $this->context->get_task($name)->add_after($lambda);
     }
 
     //
