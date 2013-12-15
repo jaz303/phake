@@ -5,7 +5,7 @@ use org\bovigo\vfs\vfsStream;
 
 class VfsTestCase extends PHPUnit_Framework_TestCase {
     function vfsFile($filename) {
-        vfsStream::setup('test', null, [ $filename => '' ]);
+        vfsStream::setup('test', null, array($filename => ''));
         return vfsStream::url("test/$filename");
     }
 
