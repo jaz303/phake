@@ -6,6 +6,7 @@ class Node
 {
     private $parent;
     private $name;
+    private $hidden = false;
 
     private $deps       = array();
     private $desc       = null;
@@ -91,15 +92,7 @@ class Node
         $this->has_run = true;
     }
 
-    public function fill_task_list(&$out, $prefix = '') {
-        foreach ($this->get_tasks() as $name => $node) {
-            if ($desc = $node->get_description()) {
-                $out[$name] = $desc;
-            }
-        }
-    }
-
-    public function get_dependencies(){
+    public function get_dependencies() {
         $deps = array();
 
         foreach ($this->deps as $depName) {
@@ -108,6 +101,14 @@ class Node
         }
 
         return $deps;
+    }
+
+    public function has_dependencies() {
+        return !!$this->dependencies();
+    }
+
+    public function has_body() {
+        return !!$this->tasks;
     }
 
     public function get_task($task_name) {
@@ -136,6 +137,10 @@ class Node
         }
 
         return $root->get_task($task_name);
+    }
+
+    public function is_visible() {
+        return (!$this->hidden && ($this->has_body() || $this->has_dependencies()));
     }
 
     public function get_tasks() {

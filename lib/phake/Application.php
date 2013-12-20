@@ -38,7 +38,11 @@ class Application implements \ArrayAccess, \IteratorAggregate
 
     public function get_task_list() {
         $list = array();
-        $this->root->fill_task_list($list);
+        foreach ($this->get_tasks() as $name => $task) {
+            if ($task->is_visible()) {
+                $list[$name] = $task->get_description();
+            }
+        }
         ksort($list);
         return $list;
     }
