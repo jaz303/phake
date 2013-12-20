@@ -14,6 +14,9 @@ class NodeTest extends TestCase
         $this->assertEquals(null, $root->get_parent());
         $this->assertEquals($root, $root->get_root());
         $this->assertEquals(array(), $root->get_dependencies());
+        $this->assertFalse($root->has_body());
+        $this->assertFalse($root->is_visible());
+
 
         return $root;
     }
@@ -71,5 +74,27 @@ class NodeTest extends TestCase
         $this->assertSame($second, $first->get_task('second'));
         $this->assertSame($second, $root->get_task('first:second'));
         $this->assertSame($second, $first->get_task(':first:second'));
+    }
+
+    public function testNodeBecomesVisibleWhenItGetsBody()
+    {
+        $node = new Node();
+        $this->assertFalse($node->has_body());
+        $this->assertFalse($node->is_visible());
+
+        $node->add_body(function() { });
+        $this->assertTrue($node->has_body());
+        $this->assertTrue($node->is_visible());
+    }
+
+    public function testNodeBecomesVisibleWhenItGetsDependencies()
+    {
+        $node = new Node();
+        $this->assertFalse($node->has_dependencies());
+        $this->assertFalse($node->is_visible());
+
+        $node->add_dependency('does not matter');
+        $this->assertTrue($node->has_dependencies());
+        $this->assertTrue($node->is_visible());
     }
 }
