@@ -37,7 +37,7 @@ class Builder
         /* @var $node phake\Node */
 
         if ($work !== null) {
-            $node->add_lambda($work);
+            $node->add_body($work);
         }
         foreach ($deps as $dep) {
             $node->add_dependency($dep);
