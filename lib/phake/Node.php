@@ -104,7 +104,7 @@ class Node
     }
 
     public function has_dependencies() {
-        return !!$this->dependencies();
+        return !!$this->deps;
     }
 
     public function has_body() {
