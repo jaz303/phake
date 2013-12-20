@@ -5,8 +5,6 @@
  * The benefit is that an autoloader is not needed
  */
 
-require_once __DIR__ . '/functions.php';
-require_once __DIR__ . '/term_colors.php';
 require_once __DIR__ . '/phake/Application.php';
 require_once __DIR__ . '/phake/Bin.php';
 require_once __DIR__ . '/phake/Builder.php';

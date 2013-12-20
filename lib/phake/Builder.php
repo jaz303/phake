@@ -93,6 +93,9 @@ class Builder
             throw new \Exception('The given path to the Phakefile does not exist');
         }
 
+        require_once __DIR__ . '/../functions.php';
+        require_once __DIR__ . '/../term_colors.php';
+
         // set global reference for builder() helper as used in Phakefiles
         self::$global = $this;
 
