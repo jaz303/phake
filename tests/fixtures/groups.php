@@ -1,9 +1,9 @@
 <?php
 
-task('a:b', function () { writeln('a:b'); });
+task('a:b', function () { echo "a:b\n"; });
 
 group('b', function () {
-    task('a', function () { writeln('b:a'); });
+    task('a', function () { echo "b:a\n"; });
 });
 
 task('default', 'a:b', 'b:a');
