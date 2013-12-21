@@ -49,11 +49,18 @@ class Node
         return $root;
     }
 
-    public function child_with_name($name) {
-        if (!isset($this->children[$name])) {
-            $this->children[$name] = new Node($this, $name);
+    public function child_with_name($task_name) {
+        $parts = explode(':', $task_name);
+
+        $task = $this;
+        foreach ($parts as $part) {
+            if (!isset($task->children[$part])) {
+                $task->children[$part] = new Node($task, $part);
+            }
+            $task = $task->children[$part];
         }
-        return $this->children[$name];
+
+        return $task;
     }
 
     public function add_before($closure) { $this->before[]  = $closure; }
