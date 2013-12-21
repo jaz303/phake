@@ -7,7 +7,7 @@ class Builder
     public static $global;
 
     private $application;
-    private $context;
+    private $target_node;
     private $description;
 
     public function __construct(Application $application = null) {
@@ -15,7 +15,7 @@ class Builder
             $application = new Application;
         }
         $this->application = $application;
-        $this->context = $this->application->root();
+        $this->target_node = $this->application->root();
         $this->description = null;
     }
 
@@ -29,11 +29,11 @@ class Builder
 
     public function clear() {
         $this->application->clear();
-        $this->context = $this->application->root();
+        $this->target_node = $this->application->root();
     }
 
     public function add_task($name, $work, $deps) {
-        $node = $this->context->child_with_name($name);
+        $node = $this->target_node->child_with_name($name);
         /* @var $node phake\Node */
 
         if ($work !== null) {
@@ -46,19 +46,19 @@ class Builder
     }
 
     public function push_group($name) {
-        $this->context = $this->context->child_with_name($name);
+        $this->target_node = $this->target_node->child_with_name($name);
     }
 
     public function pop_group() {
-        $this->context = $this->context->get_parent();
+        $this->target_node = $this->target_node->get_parent();
     }
 
     public function before($name, $lambda) {
-        $this->context->get_task($name)->add_before($lambda);
+        $this->target_node->get_task($name)->add_before($lambda);
     }
 
     public function after($name, $lambda) {
-        $this->context->get_task($name)->add_after($lambda);
+        $this->target_node->get_task($name)->add_after($lambda);
     }
 
     //
