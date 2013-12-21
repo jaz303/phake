@@ -14,11 +14,7 @@
   "autoload": {
     "psr-0": {
       "phake": "lib/"
-    },
-    "files": [
-      "lib/functions.php",
-      "lib/term_colors.php"
-    ]
+    }
   },
   "bin": ["bin/phake"],
   "require": {
