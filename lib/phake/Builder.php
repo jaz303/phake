@@ -51,7 +51,7 @@ class Builder
         $this->target_node = $this->target_node->child_with_name($name);
 
         try {
-            if ($lambda instanceof \Closure) $lambda();
+            if ($lambda instanceof \Closure) $lambda($this->application);
         } catch (\Exception $e) {
             $thrown = $e;
         }
