@@ -18,17 +18,7 @@ function task() {
 }
 
 function group($name, $lambda = null) {
-    $thrown = null;
-    builder()->push_group($name);
-    try {
-        if ($lambda instanceof Closure) $lambda();
-    } catch (\Exception $e) {
-        $thrown = $e;
-    }
-    builder()->pop_group();
-    if ($thrown) {
-        throw $e;
-    }
+    builder()->add_group($name, $lambda);
 }
 
 function before($task, $lambda) {
