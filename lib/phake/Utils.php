@@ -17,4 +17,13 @@ class Utils
         }
         return $out;
     }
+
+    private static $is_tty = null;
+
+    public static function is_tty() {
+        if (self::$is_tty === null) {
+            self::$is_tty = function_exists('posix_isatty') ? posix_isatty(STDOUT) : false;
+        }
+        return self::$is_tty;
+    }
 }
