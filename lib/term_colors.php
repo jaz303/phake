@@ -30,13 +30,13 @@ function colorize($str, $color, $bold = false) {
     $bold = (int)$bold;
     $bg = $color == 'black' ? "\033[47m" : '';
 
-    return is_tty() ?
+    return \phake\Utils::is_tty() ?
         "\033[{$bold};{$code}m{$bg}{$str}\033[0m":
         $str;
 }
 
 function bold($str) {
-    return is_tty() ?
+    return \phake\Utils::is_tty() ?
         "\033[1m{$str}\033[2m" :
         $str;
 }
@@ -71,8 +71,4 @@ function purple($str, $bold = false) {
 
 function black($str, $bold = false) {
     return colorize($str, 'black', $bold);
-}
-
-function is_tty() {
-    return function_exists('posix_isatty') ? posix_isatty(STDOUT) : false;
 }

@@ -97,4 +97,26 @@ class NodeTest extends TestCase
         $this->assertTrue($node->has_dependencies());
         $this->assertTrue($node->is_visible());
     }
+
+    public function testGroupedNodes()
+    {
+        $root = new Node();
+
+        $ab = $root->child_with_name('a:b');
+        $this->assertSame($ab, $root->get_task('a:b'));
+
+        $a = $ab->get_parent();
+        $this->assertSame($a, $root->get_task('a'));
+        $this->assertEquals(array('a:b' => $ab), $a->get_tasks());
+
+        $this->assertSame($root, $a->get_parent());
+        $this->assertSame($root, $ab->get_root());
+        $this->assertEquals(
+            array(
+                'a' => $a,
+                'a:b' => $ab
+            ),
+            $root->get_tasks()
+        );
+    }
 }

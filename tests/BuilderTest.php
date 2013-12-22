@@ -66,4 +66,19 @@ EOF
 
         $builder->get_application()->invoke('default');
     }
+
+    public function testGroups()
+    {
+        $builder = new Builder();
+
+        $builder->load_runfile($this->getFixture('groups.php'));
+
+        $this->expectOutputString(<<<EOF
+a:b
+b:a
+
+EOF
+);
+        $builder->get_application()->invoke('default');
+    }
 }

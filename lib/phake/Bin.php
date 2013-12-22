@@ -106,15 +106,27 @@ class Bin
     }
 
     private function fatal($exception, $message = null, $trace = false) {
+        
         echo "aborted!\n";
+        
         if (!$message) $message = $exception->getMessage();
         if (!$message) $message = get_class($exception);
-        write(red($message), "\n\n");
+
+        if (Utils::is_tty()) {
+            echo "\033[0;31m{$message}\033[0m";
+        } else {
+            echo $message;
+        }
+        
+        echo "\n\n";
+
         if ($trace) {
            echo $exception->getTraceAsString() . "\n";
         } else {
             echo "(See full trace by running task with --trace)\n";
         }
+
         die(1);
+
     }
 }
