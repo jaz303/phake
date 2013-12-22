@@ -13,7 +13,7 @@ class Node
     private $has_run    = false;
 
     private $before     = array();
-    private $lambdas    = array();
+    private $bodies     = array();
     private $after      = array();
 
     private $children   = array();
@@ -63,9 +63,9 @@ class Node
         return $task;
     }
 
-    public function add_before($closure) { $this->before[]  = $closure; }
-    public function add_lambda($closure) { $this->lambdas[] = $closure; }
-    public function add_after($closure)  { $this->after[]   = $closure; }
+    public function add_before($closure) { $this->before[] = $closure; }
+    public function add_body($closure) {   $this->bodies[] = $closure; }
+    public function add_after($closure)  { $this->after[]  = $closure; }
 
     public function get_description() {
         return $this->desc;
@@ -92,9 +92,9 @@ class Node
             return;
         }
 
-        foreach ($this->before  as $t) $t($application);
-        foreach ($this->lambdas as $t) $t($application);
-        foreach ($this->after   as $t) $t($application);
+        foreach ($this->before as $t) $t($application);
+        foreach ($this->bodies as $t) $t($application);
+        foreach ($this->after  as $t) $t($application);
 
         $this->has_run = true;
     }
@@ -111,11 +111,11 @@ class Node
     }
 
     public function has_dependencies() {
-        return !!$this->dependencies();
+        return !!$this->deps;
     }
 
     public function has_body() {
-        return !!$this->tasks;
+        return !!$this->bodies;
     }
 
     public function get_task($task_name) {
