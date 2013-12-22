@@ -81,4 +81,23 @@ EOF
 );
         $builder->get_application()->invoke('default');
     }
+
+    public function testArguments()
+    {
+        $builder = new Builder();
+
+        $builder->load_runfile($this->getFixture('arguments.php'));
+
+        $this->expectOutputString(<<<EOF
+first
+phake\Application
+phake\Node
+first:test
+phake\Application
+phake\Node
+
+EOF
+        );
+        $builder->get_application()->invoke('default');
+    }
 }
