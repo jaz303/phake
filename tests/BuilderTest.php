@@ -100,4 +100,25 @@ EOF
         );
         $builder->get_application()->invoke('default');
     }
+
+    public function testBuilderGroupException()
+    {
+        $builder = new Builder();
+
+        try {
+            $builder->add_group('exception', function() {
+                throw new \Exception();
+            });
+            $this->fail('No exception thrown');
+        }
+        catch (Exception $e) {
+            // exception caught. Now check our context is still correct
+        }
+
+        $that = $this;
+        $builder->add_group('ok', function($app, $node) use ($that) {
+            $that->assertInstanceOf('phake\Node', $node);
+            $that->assertEquals('ok', $node->get_name());
+        });
+    }
 }
