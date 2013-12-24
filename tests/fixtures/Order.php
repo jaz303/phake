@@ -1,6 +1,6 @@
 <?php
 function p($t) {
-  echo $t . "\n";
+  writeln($t);
 }
 
 group('bleem', function() {
