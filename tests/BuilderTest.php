@@ -67,18 +67,24 @@ EOF
         $builder->get_application()->invoke('default');
     }
 
-    public function testGroups()
+    public function testLoadOthers()
     {
         $builder = new Builder();
 
-        $builder->load_runfile($this->getFixture('groups.php'));
+        $builder->load_runfile($this->getFixture('load-others.php'));
 
-        $this->expectOutputString(<<<EOF
-a:b
-b:a
-
-EOF
-);
-        $builder->get_application()->invoke('default');
+        $tasks = $builder->get_application()->get_tasks();
+        $this->assertEquals(
+            array(
+                'main',
+                'main:default',
+                'empty',
+                'sub',
+                'sub:sub',
+                'sub:sub:default',
+                'link'
+            ),
+            array_keys($tasks)
+        );
     }
 }
