@@ -111,11 +111,11 @@ class Node
     }
 
     public function has_dependencies() {
-        return !!$this->dependencies();
+        return !!$this->get_dependencies();
     }
 
     public function has_body() {
-        return !!$this->tasks;
+        return !!$this->lambdas;
     }
 
     public function get_task($task_name) {
