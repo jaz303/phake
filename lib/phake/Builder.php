@@ -65,10 +65,10 @@ class Builder
     //
 
     private function assign_description($thing) {
-        if ($this->description !== null) {
+        if ($this->description !== null && !$thing->has_description()) {
             $thing->set_description($this->description);
-            $this->description = null;
         }
+        $this->description = null;
     }
 
     public function resolve_runfile($directory) {

@@ -67,6 +67,10 @@ class Node
     public function add_lambda($closure) { $this->lambdas[] = $closure; }
     public function add_after($closure)  { $this->after[]   = $closure; }
 
+    public function has_description() {
+        return $this->desc !== null;
+    }
+
     public function get_description() {
         return $this->desc;
     }
