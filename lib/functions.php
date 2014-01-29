@@ -43,6 +43,10 @@ function desc($description) {
     builder()->desc($description);
 }
 
+function load_runfile($path) {
+    builder()->load_runfile($path);
+}
+
 /**
  * Writes arguments to stdout, each separated by a space
  * @param string $str...
