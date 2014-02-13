@@ -71,6 +71,21 @@ class NodeTest extends TestCase
         $this->assertSame($second, $first->get_task('second'));
         $this->assertSame($second, $root->get_task('first:second'));
         $this->assertSame($second, $first->get_task(':first:second'));
+
+        return $second;
+    }
+
+    /**
+     *
+     * @param Node $second
+     * @depends testSecondLevelNode
+     */
+    public function testThirdLevelNode(Node $second)
+    {
+        /* @var $third Node */
+        $third = $second->child_with_name('third');
+
+        $this->assertEquals('first:second:third', $third->get_name());
     }
 
     public function testGroupedNodes()
