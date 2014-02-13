@@ -28,7 +28,7 @@ class Node
 
         $parent = $this->parent;
         while ($parent !== null && $parent->parent !== null) {
-            $name .= $parent->name . ':';
+            $name = $parent->name . ':' . $name;
             $parent = $parent->parent;
         }
 
