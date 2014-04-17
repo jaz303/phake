@@ -26,7 +26,7 @@ Define tasks like this:
         echo "i will run second!\n";
     });
 
-    task('task_name', 'dependency1', dependency2', function() {
+    task('task_name', 'dependency1', 'dependency2', function() {
         echo "i will run last!\n";
     });
     
