@@ -132,6 +132,7 @@ class Node
 
     public function get_task($task_name) {
         if ($task_name[0] != ':') {
+            
             $parts = explode(':', $task_name);
 
             $task = $this;
@@ -143,19 +144,18 @@ class Node
                     break;
                 }
             }
+
             if ($task !== null) {
                 return $task;
+            } else if ($this->parent) {
+                return $this->parent->get_task($task_name);
+            } else {
+                throw new TaskNotFoundException;
             }
+
         } else {
-            $task_name = substr($task_name, 1);
+            return $this->get_root()->get_task(substr($task_name, 1));
         }
-
-        $root = $this->get_root();
-        if ($root === $this) {
-            throw new TaskNotFoundException;
-        }
-
-        return $root->get_task($task_name);
     }
 
     public function is_visible() {
