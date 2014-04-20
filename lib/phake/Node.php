@@ -115,7 +115,7 @@ class Node
         $deps = array();
 
         foreach ($this->deps as $depName) {
-            $task = $this->get_task($depName);
+            $task = $this->parent->get_task($depName);
             $deps[$task->get_name()] = $task;
         }
 
