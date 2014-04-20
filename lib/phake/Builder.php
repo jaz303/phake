@@ -9,6 +9,7 @@ class Builder
     private $application;
     private $target_node;
     private $description;
+    private $hidden;
 
     public function __construct(Application $application = null) {
         if ($application === null) {
@@ -17,6 +18,7 @@ class Builder
         $this->application = $application;
         $this->target_node = $this->application->root();
         $this->description = null;
+        $this->hidden = false;
     }
 
     public function get_application() {
@@ -25,6 +27,10 @@ class Builder
 
     public function desc($d) {
         $this->description = $d;
+    }
+
+    public function hide() {
+        $this->hidden = true;
     }
 
     public function clear() {
@@ -43,6 +49,7 @@ class Builder
             $node->add_dependency($dep);
         }
         $this->assign_description($node);
+        $this->assign_hidden($node);
     }
 
     public function push_group($name) {
@@ -69,6 +76,13 @@ class Builder
             $thing->set_description($this->description);
         }
         $this->description = null;
+    }
+
+    private function assign_hidden($thing) {
+        if ($this->hidden) {
+            $thing->hide();
+        }
+        $this->hidden = false;
     }
 
     public function resolve_runfile($directory) {

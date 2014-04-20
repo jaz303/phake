@@ -43,6 +43,10 @@ function desc($description) {
     builder()->desc($description);
 }
 
+function hide() {
+    builder()->hide();
+}
+
 /**
  * Writes arguments to stdout, each separated by a space
  * @param string $str...

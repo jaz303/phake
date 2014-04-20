@@ -6,7 +6,7 @@ class Node
 {
     private $parent;
     private $name;
-    private $hidden = false;
+    private $hidden     = false;
 
     private $deps       = array();
     private $desc       = null;
@@ -66,6 +66,14 @@ class Node
     public function add_before($closure) { $this->before[]  = $closure; }
     public function add_lambda($closure) { $this->lambdas[] = $closure; }
     public function add_after($closure)  { $this->after[]   = $closure; }
+
+    public function is_hidden() {
+        return $this->hidden;
+    }
+
+    public function hide() {
+        $this->hidden = true;
+    }
 
     public function has_description() {
         return $this->desc !== null;
@@ -151,7 +159,7 @@ class Node
     }
 
     public function is_visible() {
-        return (!$this->hidden && ($this->has_body() || $this->has_dependencies()));
+        return (!$this->is_hidden() && ($this->has_body() || $this->has_dependencies()));
     }
 
     public function get_tasks() {

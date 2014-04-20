@@ -64,6 +64,7 @@ group('test', function() {
     
     // use ':environment' to refer to task in root group
     // we currently have no cyclic dependency checking, you have been warned.
+    hide();
     task('environment', ':environment', function() {
         echo "I am the inner environment. I should run second.\n";
     });
