@@ -6,6 +6,8 @@ Released under the MIT License.
 
 A wee clone of Ruby's `rake` for PHP 5.3. Uses closures for ultimate coolness.
 
+Questions abut `phake`? Come and chat in `#phake` on Freenode!
+
 Usage
 -----
 
