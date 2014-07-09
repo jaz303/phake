@@ -6,6 +6,7 @@ use phake\Builder;
 use phake\OptionParser;
 use phake\Utils;
 use phake\TaskNotFoundException;
+use phake\CycleDetector;
 use Exception;
 
 class Bin
@@ -36,6 +37,10 @@ class Bin
                     case 'f':
                     case 'file':
                         $runfile = $value;
+                        break;
+                    case 'C':
+                    case 'cycles':
+                        $action = 'detect_cycles';
                         break;
                     default:
                         throw new Exception("Unknown command line option '$option'");
@@ -75,7 +80,6 @@ class Bin
             }
 
             $builder->load_runfile($runfile);
-
             //
             // Go, go, go
             $application->set_args($cli_args);
@@ -96,12 +100,30 @@ class Bin
                         $application->invoke($task_name);
                     }
                     break;
+                case 'detect_cycles':
+                    $this->detect_cycles($application);
             }
 
         } catch (TaskNotFoundException $tnfe) {
             $this->fatal($tnfe, "Don't know how to build task '$task_name'\n", $trace);
         } catch (Exception $e) {
             $this->fatal($e, null, $trace);
+        }
+    }
+
+    private function detect_cycles($application) {
+        $cycles = (new CycleDetector($application->root()))->get_cycles();
+        if (empty($cycles)) {
+            echo "No task cycles found.\n";
+        } else {
+            $num_cycles = count($cycles);
+            $pluralized_cycle_label = ($num_cycles > 1 ? 'cycles' : 'cycle');
+            echo "$num_cycles $pluralized_cycle_label found:\n";
+            foreach ($cycles as $cycle) {
+                $task_names = array_map(function ($task) { return $task->get_name(); }, $cycle);
+                echo '>> ' . implode(', ', $task_names) . "\n";
+            }
+            echo "\nTo ensure proper execution of tasks, please untangle these cyclic dependencies\n";
         }
     }
 
