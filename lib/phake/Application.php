@@ -63,7 +63,7 @@ class Application implements \ArrayAccess, \IteratorAggregate
     }
 
     public function offsetGet($k) {
-        return $this->args[$k];
+        return isset($this->args[$k]) ? $this->args[$k] : null;
     }
 
     public function offsetSet($k, $v) {
