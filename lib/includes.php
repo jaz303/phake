@@ -12,5 +12,6 @@ require_once __DIR__ . '/phake/CycleDetector.php';
 require_once __DIR__ . '/phake/Node.php';
 require_once __DIR__ . '/phake/OptionParser.php';
 require_once __DIR__ . '/phake/TaskCollisionException.php';
+require_once __DIR__ . '/phake/TaskCycleFoundException.php';
 require_once __DIR__ . '/phake/TaskNotFoundException.php';
 require_once __DIR__ . '/phake/Utils.php';
