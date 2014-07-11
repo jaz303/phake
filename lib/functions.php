@@ -61,7 +61,7 @@ function write() {
         $out .= $str;
         $was_newline = $str[strlen($str)-1] == "\n";
     }
-    fwrite(STDOUT, $out);
+    echo $out;
 }
 
 /**
@@ -70,5 +70,5 @@ function write() {
  */
 function writeln() {
     call_user_func_array('write', func_get_args());
-    fwrite(STDOUT, "\n");
+    echo "\n";
 }
