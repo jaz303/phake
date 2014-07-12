@@ -52,12 +52,22 @@ class Builder
         $this->assign_hidden($node);
     }
 
-    public function push_group($name) {
-        $this->target_node = $this->target_node->child_with_name($name);
-    }
+    public function add_group($name, $lambda = null) {
+        $thrown = null;
 
-    public function pop_group() {
+        $this->target_node = $this->target_node->child_with_name($name);
+
+        try {
+            if ($lambda instanceof \Closure) $lambda($this->application, $this->target_node);
+        } catch (\Exception $e) {
+            $thrown = $e;
+        }
+
         $this->target_node = $this->target_node->get_parent();
+
+        if ($thrown) {
+            throw $e;
+        }
     }
 
     public function before($name, $lambda) {

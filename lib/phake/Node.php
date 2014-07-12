@@ -104,9 +104,9 @@ class Node
             return;
         }
 
-        foreach ($this->before  as $t) $t($application);
-        foreach ($this->lambdas as $t) $t($application);
-        foreach ($this->after   as $t) $t($application);
+        foreach ($this->before  as $t) $t($application, $this);
+        foreach ($this->lambdas as $t) $t($application, $this);
+        foreach ($this->after   as $t) $t($application, $this);
 
         $this->has_run = true;
     }
