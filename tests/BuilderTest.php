@@ -76,6 +76,7 @@ EOF
         $this->expectOutputString(<<<EOF
 a:b
 b:a
+y:z:a
 
 EOF
 );

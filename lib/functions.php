@@ -19,13 +19,13 @@ function task() {
 
 function group($name, $lambda = null) {
     $thrown = null;
-    builder()->push_group($name);
+    $levels = builder()->push_group($name);
     try {
         if ($lambda instanceof Closure) $lambda();
     } catch (\Exception $e) {
         $thrown = $e;
     }
-    builder()->pop_group();
+    builder()->pop_group($levels);
     if ($thrown) {
         throw $e;
     }
