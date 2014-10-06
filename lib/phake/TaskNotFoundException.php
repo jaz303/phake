@@ -11,7 +11,7 @@ class TaskNotFoundException extends Exception
      *
      * @var string
      */
-    private $taskName;
+    private $taskName = '';
 
     /**
      * Factory method for creating new exceptions
