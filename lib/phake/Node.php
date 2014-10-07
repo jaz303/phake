@@ -49,7 +49,7 @@ class Node
         return $root;
     }
 
-    public function child_with_name($task_name) {
+    public function child_with_name($task_name, &$levels = 0) {
         $parts = explode(':', $task_name);
 
         $task = $this;
@@ -59,6 +59,8 @@ class Node
             }
             $task = $task->children[$part];
         }
+
+        $levels = sizeof($parts);
 
         return $task;
     }
@@ -132,7 +134,7 @@ class Node
 
     public function get_task($task_name) {
         if ($task_name[0] != ':') {
-            
+
             $parts = explode(':', $task_name);
 
             $task = $this;

@@ -53,11 +53,15 @@ class Builder
     }
 
     public function push_group($name) {
-        $this->target_node = $this->target_node->child_with_name($name);
+        $levels = 0;
+        $this->target_node = $this->target_node->child_with_name($name, $levels);
+        return $levels;
     }
 
-    public function pop_group() {
-        $this->target_node = $this->target_node->get_parent();
+    public function pop_group($levels = 1) {
+        for ($i = 0; $i < $levels; $i++) {
+            $this->target_node = $this->target_node->get_parent();
+        }
     }
 
     public function before($name, $lambda) {
