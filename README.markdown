@@ -196,7 +196,3 @@ Bash Autocompletion
 
 Bashkim Isai has created [`phake-autocomplete`](https://github.com/bashaus/phake-autocomplete), a bash-completion script for phake task names.
 
-Known Bugs
-----------
-
-No cyclic dependency checking.
