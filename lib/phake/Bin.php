@@ -6,6 +6,8 @@ use phake\Builder;
 use phake\OptionParser;
 use phake\Utils;
 use phake\TaskNotFoundException;
+use phake\CycleDetector;
+use phake\TaskCycleFoundException;
 use Exception;
 
 class Bin
@@ -20,6 +22,7 @@ class Bin
             $task_names = array('default');
             $trace      = false;
             $runfile    = false;
+            $run_safely = true;
 
             array_shift($args);
             $parser = new OptionParser($args);
@@ -36,6 +39,10 @@ class Bin
                     case 'f':
                     case 'file':
                         $runfile = $value;
+                        break;
+                    case 'u':
+                    case 'unsafe':
+                        $run_safely = false;
                         break;
                     default:
                         throw new Exception("Unknown command line option '$option'");
@@ -75,11 +82,17 @@ class Bin
             }
 
             $builder->load_runfile($runfile);
-
             //
             // Go, go, go
             $application->set_args($cli_args);
             $application->reset();
+
+            if ($run_safely) {
+                $does_cycle = $this->detect_and_display_cycles($application);
+                if ($does_cycle) {
+                    throw new TaskCycleFoundException;
+                }
+            }
 
             switch ($action) {
                 case 'list':
@@ -103,6 +116,23 @@ class Bin
         } catch (Exception $e) {
             $this->fatal($e, null, $trace);
         }
+    }
+
+    private function detect_and_display_cycles($application) {
+        $cycles = (new CycleDetector($application->root()))->get_cycles();
+        if (empty($cycles)) {
+            return false;
+        }
+
+        $num_cycles = count($cycles);
+        $pluralized_cycle_label = ($num_cycles > 1 ? 'cycles' : 'cycle');
+        echo "$num_cycles $pluralized_cycle_label found:\n";
+        foreach ($cycles as $cycle) {
+            $task_names = array_map(function ($task) { return $task->get_name(); }, $cycle);
+            echo '>> ' . implode(', ', $task_names) . "\n";
+        }
+        echo "\nTo ensure proper execution of tasks, please untangle these cyclic dependencies\n";
+        return true;
     }
 
     private function fatal($exception, $message = null, $trace = false) {
