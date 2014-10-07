@@ -3,7 +3,7 @@
 namespace phake;
 
 //
-// getopt() in PHP blows goats as it can't update argv to get non-options.
+// getopt() can't update argv to get non-options.
 // and i didn't want to rely on PEAR. hence this disaster.
 // you can't specify whether or not options have an argument. instead it's greedy,
 // so option always consumes argument if available.
