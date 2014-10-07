@@ -150,7 +150,7 @@ class Node
             } else if ($this->parent) {
                 return $this->parent->get_task($task_name);
             } else {
-                throw TaskNotFoundException::create($task_name);
+                throw new TaskNotFoundException($task_name);
             }
 
         } else {

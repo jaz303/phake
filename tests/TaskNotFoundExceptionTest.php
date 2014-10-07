@@ -16,7 +16,7 @@ class TaskNotFoundExceptionTest extends PHPUnit_Framework_TestCase
      */
     public function testCreate()
     {
-        $e = TaskNotFoundException::create('foo');
+        $e = new TaskNotFoundException('foo');
         $this->assertInstanceOf('phake\TaskNotFoundException', $e);
         $this->assertEquals('Task "foo" not found', $e->getMessage());
     }
@@ -28,7 +28,7 @@ class TaskNotFoundExceptionTest extends PHPUnit_Framework_TestCase
      */
     public function testGetTaskName()
     {
-        $e = TaskNotFoundException::create('foo');
+        $e = new TaskNotFoundException('foo');
         $this->assertEquals('foo', $e->getTaskName());
     }
 }
