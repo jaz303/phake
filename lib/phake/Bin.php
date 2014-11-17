@@ -119,7 +119,8 @@ class Bin
     }
 
     private function detect_and_display_cycles($application) {
-        $cycles = (new CycleDetector($application->root()))->get_cycles();
+        $cycleDetector = new CycleDetector($application->root());
+        $cycles = $cycleDetector->get_cycles();
         if (empty($cycles)) {
             return false;
         }
