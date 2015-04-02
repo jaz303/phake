@@ -112,7 +112,7 @@ class Bin
             }
 
         } catch (TaskNotFoundException $tnfe) {
-            $this->fatal($tnfe, "Don't know how to build task '$task_name'\n", $trace);
+            $this->fatal($tnfe, sprintf("Don't know how to build task '%s'\n", $tnfe->getTaskName()), $trace);
         } catch (Exception $e) {
             $this->fatal($e, null, $trace);
         }
