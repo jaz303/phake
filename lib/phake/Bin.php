@@ -138,23 +138,23 @@ class Bin
 
     private function fatal($exception, $message = null, $trace = false) {
         
-        echo "aborted!\n";
+        fwrite(STDERR, "aborted!\n");
         
         if (!$message) $message = $exception->getMessage();
         if (!$message) $message = get_class($exception);
 
         if (Utils::is_tty()) {
-            echo "\033[0;31m{$message}\033[0m";
+            fwrite(STDERR, "\033[0;31m{$message}\033[0m");
         } else {
-            echo $message;
+            fwrite(STDERR, $message);
         }
         
-        echo "\n\n";
+        fwrite(STDERR, "\n\n");
 
         if ($trace) {
-           echo $exception->getTraceAsString() . "\n";
+            fwrite(STDERR, $exception->getTraceAsString() . "\n");
         } else {
-            echo "(See full trace by running task with --trace)\n";
+            fwrite(STDERR, "(See full trace by running task with --trace)\n");
         }
 
         die(1);
