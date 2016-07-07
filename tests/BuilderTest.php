@@ -24,6 +24,63 @@ class BuilderTest extends TestCase
         $builder->load_runfile('does not exist');
     }
 
+    /**
+     * @dataProvider provideResolveRunfile
+     */
+    public function testResolveRunfile($search, $expected)
+    {
+        $builder = new Builder();
+
+        $this->assertEquals($expected, $builder->resolve_runfile($search));
+    }
+
+    public function provideResolveRunfile()
+    {
+        $root = __DIR__ . '/..';
+
+        return array(
+            array(
+                $root,
+                $root . '/Phakefile'
+            ),
+            array(
+                $root . '/bin',
+                $root . '/Phakefile'
+            ),
+            array(
+                $root . '/example',
+                $root . '/example/Phakefile'
+            ),
+            array(
+                $root . '/lib/phake',
+                $root . '/Phakefile'
+            )
+        );
+    }
+
+    /**
+     * @expectedException Exception
+     * @dataProvider provideResolveRunfileNonExistant
+     */
+    public function testResolveRunfileNonExistant($path)
+    {
+        $builder = new Builder();
+
+        $builder->resolve_runfile($path);
+    }
+
+    public function provideResolveRunfileNonExistant()
+    {
+        return array(
+            array(
+                realpath('../../')
+            ),
+            array(
+                realpath(__DIR__ . '/../..')
+            ),
+        );
+    }
+
     public function testEmpty()
     {
         $builder = new Builder();

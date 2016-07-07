@@ -90,20 +90,21 @@ class Builder
     }
 
     public function resolve_runfile($directory) {
-        $directory = rtrim($directory, '/') . '/';
+        $directory = rtrim($directory, '/');
         $runfiles = array('Phakefile', 'Phakefile.php');
+
         do {
             foreach ($runfiles as $r) {
-                $candidate = $directory . $r;
+                $candidate = $directory . '/' . $r;
                 if (file_exists($candidate)) {
                     return $candidate;
                 }
             }
-            if ($directory == '/') {
-                throw new \Exception("No Phakefile found");
-            }
+            $previous  = $directory;
             $directory = dirname($directory);
-        } while (true);
+        } while ($directory !== $previous);
+
+        throw new \Exception("No Phakefile found");
     }
 
     public function load_runfile($file) {
