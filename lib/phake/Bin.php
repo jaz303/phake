@@ -74,11 +74,7 @@ class Bin
                 $runfile = $builder->resolve_runfile(getcwd());
                 $directory = dirname($runfile);
 
-                if (!@chdir($directory)) {
-                    throw new Exception("Couldn't change to directory '$directory'");
-                } else {
-                    echo "(in $directory)\n";
-                }
+                echo "(in $directory)\n";
             }
 
             $builder->load_runfile($runfile);
