@@ -58,22 +58,27 @@ class Application implements \ArrayAccess, \IteratorAggregate
         $this->args = $args;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetExists($k) {
         return array_key_exists($k, $this->args);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($k) {
         return isset($this->args[$k]) ? $this->args[$k] : null;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($k, $v) {
         $this->args[$k] = $v;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($k) {
         unset($this->args[$k]);
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator() {
         return new \ArrayIterator($this->args);
     }
